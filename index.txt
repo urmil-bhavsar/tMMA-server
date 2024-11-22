@@ -1,0 +1,76 @@
+const app = require("./app");
+const { dbConnect } = require("./db");
+
+// Configure environment variables
+require("dotenv").config();
+
+// Additional middleware or configurations
+const cluster = require("cluster");
+const os = require("os");
+
+const PORT = process.env.PORT || 3000;
+
+// Database connection
+dbConnect()
+  .then(() => {
+    console.log("Database connection established.");
+
+    // Optional: Enable clustering for performance
+    if (process.env.CLUSTER_MODE === "true" && cluster.isMaster) {
+      const numCPUs = os.cpus().length;
+      console.log(`Master process running. Spawning ${numCPUs} workers...`);
+
+      for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+      }
+
+      cluster.on("exit", (worker, code, signal) => {
+        console.log(`Worker ${worker.process.pid} died. Spawning a new one.`);
+        cluster.fork();
+      });
+    } else {
+      // Start the server
+      app
+        .listen(PORT, () => {
+          console.log(`\nServer started on port ${PORT}`);
+        })
+        .on("error", (error) => {
+          console.log("Error connecting to the server ", error);
+        });
+    }
+
+    // Set app-level variables
+    app.locals.appName = process.env.APP_NAME || "My App";
+    app.locals.version = "1.0.0";
+
+    console.log(`Application Name: ${app.locals.appName}`);
+    console.log(`Version: ${app.locals.version}`);
+
+    // Optional: Health check endpoint
+    app.get("/health", (req, res) => {
+      res.status(200).json({ status: "OK", uptime: process.uptime() });
+    });
+
+    // Example: Add global error handling middleware
+    app.use((err, req, res, next) => {
+      console.error("Unhandled error:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
+  })
+  .catch((error) => {
+    console.log("Error in connecting to the database ", error);
+  });
+
+// Optional: Graceful shutdown handling
+process.on("SIGTERM", () => {
+  console.log("SIGTERM signal received: closing server...");
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT signal received: shutting down.");
+  process.exit(0);
+});
