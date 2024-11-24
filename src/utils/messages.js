@@ -1,18 +1,18 @@
-const mongoose = require("mongoose");
-const { constants } = require("../constants");
-require("dotenv").config();
-
-const dbConnect = async () => {
-  try {
-    const connectionInstance = await mongoose.connect(`${process.env.MONGO_URI}/${constants.DB_NAME}`);
-    console.log(
-      "\nDB connection established DBname: ",
-      connectionInstance.connection.name
-    );
-  } catch (error) {
-    console.error("Error connecting to the database", error);
-    process.exit(1);
+const messages = {
+  SUCCESS: {
+    LOGIN: 'User logged in successfully',
+    BOARD_CREATE: 'Board added successfully'
+  },
+  ERROR: {
+    USER_DOESNOT_EXIST: 'User does not exist',
+    USER_CREDENTIALS: 'Invalid user credentials',
+    ACCESS_TOKEN_GENERATION: 'Something went wrong while generating access token',
+    INSUFFICIENT_CREDENTIALS: 'Insufficient user credentials',
+    UNAUTHORIZED_ACCESS: 'Your account doesnot exist',
+    INVALID_TOKEN: 'Invalid Access Token',
+    BOARD_EXISTS: 'This board already exists',
+    BOARD_CREATE: 'Something went wrong while creating the board'
   }
-};
+}
 
-module.exports = { dbConnect };
+module.exports = messages

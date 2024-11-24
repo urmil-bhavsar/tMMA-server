@@ -1,5 +1,8 @@
 const express = require("express");
-const router = express.Router();
+const authController = require("../controllers/auth.controller");
+const authRouter = express.Router();
+
+authRouter.route("/superAdminLogin").post(authController.superAdminLogin);
 
 
-router.route('/superAdminLogin').post()
+module.exports = authRouter
