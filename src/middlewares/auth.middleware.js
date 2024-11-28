@@ -3,6 +3,7 @@ const ApiError = require("../utils/apiError");
 const { asyncHandler } = require("../utils/asyncHandler");
 const { User } = require("../models/user.model");
 const messages = require("../utils/messages");
+const { decryptData } = require("../utils/crypto");
 
 verifyJWT = asyncHandler(async (req, _, next) => {
     try {
@@ -15,10 +16,11 @@ verifyJWT = asyncHandler(async (req, _, next) => {
         console.log("TOKEN  ", token)
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         const user = await User.findById(decodedToken?._id).select("-password")
-        console.log(user)
         if (!user) {
             throw new ApiError(401, messages.ERROR.INVALID_TOKEN)
         }
+        console.log(req.body, "............in middleware    ")
+        req.body = decryptData(req.body)
         req.user = user;
         next()
     } catch (error) {

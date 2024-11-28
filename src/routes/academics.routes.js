@@ -6,6 +6,7 @@ const boardSchema = require("../validators/board.schema");
 const academicsRouter = express.Router();
 
 academicsRouter.route("/createBoard").post(verifyJWT, validateRequestBody(boardSchema), academicsController.createBoard);
+academicsRouter.route("/editBoard").patch(verifyJWT, academicsController.editBoard);
 
 
 module.exports = academicsRouter

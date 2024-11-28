@@ -5,6 +5,7 @@ const messages = require("../utils/messages");
 const { Board } = require("../models/board.model");
 
 class AcademicsController {
+    // BOARD 
     createBoard = asyncHandler(async (req, res) => {
         console.log("in")
         console.log(req.body)
@@ -29,8 +30,32 @@ class AcademicsController {
     })
 
     editBoard = asyncHandler(async (req, res) => {
-
+        console.log('BODY \n', req.body)
+        const { name, id } = req.body
+        if (!name || !id) {
+            throw new ApiError(400, messages.ERROR.INSUFFICIENT_DATA)
+        }
+        const user = req.user;
+        const board = await Board.findById(id)
+        res.send(board)
+        if (board) {
+            const updatedData = {
+                name: name,
+                updatedBy: user._id
+            }
+            const updatedBoard = await Board.findByIdAndUpdate(id, updatedData)
+            if (updatedBoard) {
+                return res.status(201).json(new ApiResponse(200, createdBoard, messages.SUCCESS.BOARD_UPDATE))
+            } else {
+                throw new ApiError(500, messages.ERROR.SOMETHING_WENT_WRONG)
+            }
+        } else {
+            throw new ApiError(400, messages.ERROR.BOARD_DOES_NOT_EXISTS)
+        }
     })
+
+
+    // STANDARD
 }
 
 

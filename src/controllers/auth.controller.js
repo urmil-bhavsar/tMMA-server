@@ -4,6 +4,7 @@ const { Role } = require("../models/role.model");
 const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
 const messages = require("../utils/messages");
+const { decryptData } = require("../utils/crypto");
 
 class AuthController {
     generateAccessToken = async (userId) => {
@@ -19,7 +20,9 @@ class AuthController {
     }
 
     superAdminLogin = asyncHandler(async (req, res) => {
-        const { email, password } = req.body;
+        const data =  decryptData(req.body)
+        console.log(data, "BODYYys")
+        const { email, password } = data;
         if (!email || !password) {
             throw new ApiError(400, messages.ERROR.INSUFFICIENT_CREDENTIALS)
         }
