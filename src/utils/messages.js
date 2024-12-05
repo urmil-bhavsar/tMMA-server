@@ -2,7 +2,8 @@ const messages = {
   SUCCESS: {
     LOGIN: 'User logged in successfully',
     BOARD_CREATE: 'Board added successfully',
-    BOARD_UPDATE: 'Board upddated successfully'
+    BOARD_UPDATE: 'Board upddated successfully',
+    USER_INFO: 'User data fetched successfully'
   },
   ERROR: {
     USER_DOESNOT_EXIST: 'User does not exist',
@@ -15,7 +16,7 @@ const messages = {
     BOARD_DOES_NOT_EXISTS: 'This board does not exists',
     BOARD_CREATE: 'Something went wrong while creating the board',
     INSUFFICIENT_DATA: 'Missing or incomplete request data',
-    SOMETHING_WENT_WRONG: 'Something went wrong, please try again'
+    SOMETHING_WENT_WRONG: 'Something went wrong'
   }
 }
 

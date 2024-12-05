@@ -4,7 +4,7 @@ const { Role } = require("../models/role.model");
 const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
 const messages = require("../utils/messages");
-const { decryptData } = require("../utils/crypto");
+const { decryptData, encryptData } = require("../utils/crypto");
 
 class AuthController {
     generateAccessToken = async (userId) => {
@@ -20,7 +20,7 @@ class AuthController {
     }
 
     superAdminLogin = asyncHandler(async (req, res) => {
-        const data =  decryptData(req.body)
+        const data = decryptData(req.body)
         console.log(data, "BODYYys")
         const { email, password } = data;
         if (!email || !password) {
@@ -28,7 +28,9 @@ class AuthController {
         }
 
         const superAdmin = await User.findOne({ email: email })
+        console.log(superAdmin, "ADMIN")
         if (!superAdmin) {
+            console.log("innnnnn")
             throw new ApiError(400, messages.ERROR.USER_DOESNOT_EXIST)
         }
 
@@ -42,7 +44,7 @@ class AuthController {
                 throw new ApiError(401, messages.ERROR.USER_CREDENTIALS)
             }
             const accessToken = await this.generateAccessToken(superAdmin._id)
-            const loggedInUser = await User.findById(superAdmin._id).select("-password")
+            const loggedInUser = await User.findById(superAdmin._id).select("-password -createdAt -dateOfJoining -deletedAt")
             console.log(loggedInUser)
 
             const options = {
@@ -53,6 +55,19 @@ class AuthController {
         } else {
             throw new ApiError(401, messages.ERROR.UNAUTHORIZED_ACCESS)
         }
+    })
+
+    getLoggedInUserInfo = asyncHandler(async (req, res) => {
+        console.log(req.query, "PARAMS")
+        const userId = req.query.id;
+        const user = await User.findById(userId).select("-password -createdAt -dateOfJoining -deletedAt")
+        console.log(user)
+
+        if (!user) {
+            console.log("innnnnn")
+            throw new ApiError(400, messages.ERROR.USER_DOESNOT_EXIST)
+        }
+        return res.status(200).json(new ApiResponse(200, encryptData(user), messages.SUCCESS.USER_INFO))
     })
 }
 

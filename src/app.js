@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth.routes");
 const academicsRouter = require("./routes/academics.routes");
+const { errorHandler } = require("./middlewares/error.middleware");
 
 
 const app = express();
@@ -29,5 +30,6 @@ app.get("/", (req, res) => {
     res.send("Hi from tMMA");
 });
 app.use("/api", [authRouter, academicsRouter]);
+app.use(errorHandler) //error handler middleware
 
 module.exports = app;

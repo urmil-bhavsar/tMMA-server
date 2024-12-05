@@ -1,8 +1,8 @@
 const { asyncHandler } = require("../utils/asyncHandler");
 const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
-const messages = require("../utils/messages");
 const { Board } = require("../models/board.model");
+const messages = require("../utils/messages");
 
 class AcademicsController {
     // BOARD 
