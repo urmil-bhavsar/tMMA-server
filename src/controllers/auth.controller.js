@@ -38,6 +38,7 @@ class AuthController {
         if (!roleData) {
             throw new ApiError(401, messages.ERROR.UNAUTHORIZED_ACCESS)
         }
+        
         if (roleData.role === 'superAdmin') {
             const isPasswordCorrect = await superAdmin.isPasswordCorrect(password)
             if (!isPasswordCorrect) {

@@ -13,14 +13,13 @@ verifyJWT = asyncHandler(async (req, _, next) => {
             throw new ApiError(401, messages.ERROR.UNAUTHORIZED_ACCESS)
         }
 
-        console.log("TOKEN  ", token)
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        console.log("TOKEN  ", decodedToken)
         const user = await User.findById(decodedToken?._id).select("-password")
         if (!user) {
             throw new ApiError(401, messages.ERROR.INVALID_TOKEN)
         }
         console.log(req.body, "............in middleware    ")
-        req.body = decryptData(req.body)
         req.user = user;
         next()
     } catch (error) {
