@@ -7,6 +7,7 @@ const academicsRouter = express.Router();
 
 academicsRouter.route("/createBoard").post(verifyJWT, validateRequestBody(boardSchema), academicsController.createBoard);
 academicsRouter.route("/editBoard").patch(verifyJWT, academicsController.editBoard);
+academicsRouter.route('/boards').get(verifyJWT, academicsController.getAllBoards)
 
 
 module.exports = academicsRouter

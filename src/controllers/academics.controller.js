@@ -3,6 +3,7 @@ const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
 const { Board } = require("../models/board.model");
 const messages = require("../utils/messages");
+const { encryptData } = require("../utils/crypto");
 
 class AcademicsController {
     // BOARD 
@@ -52,6 +53,12 @@ class AcademicsController {
         } else {
             throw new ApiError(400, messages.ERROR.BOARD_DOES_NOT_EXISTS)
         }
+    })
+
+    getAllBoards = asyncHandler(async (req, res) => {
+        const boards = await Board.find().select("-createdBy -createdAt -updatedAt --deletedAt __v").sort({ updatedAt: -1 });
+        console.log(boards, 'BOARDDDD')
+        return res.status(200).json(new ApiResponse(200, encryptData(boards), messages.SUCCESS.BOARDS))
     })
 
 

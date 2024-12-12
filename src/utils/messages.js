@@ -3,7 +3,8 @@ const messages = {
     LOGIN: 'User logged in successfully',
     BOARD_CREATE: 'Board added successfully',
     BOARD_UPDATE: 'Board upddated successfully',
-    USER_INFO: 'User data fetched successfully'
+    USER_INFO: 'User data fetched successfully',
+    BOARDS: 'Boards fetched successfully'
   },
   ERROR: {
     USER_DOESNOT_EXIST: 'User does not exist',
