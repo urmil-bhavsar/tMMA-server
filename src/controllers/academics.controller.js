@@ -56,7 +56,7 @@ class AcademicsController {
     })
 
     getAllBoards = asyncHandler(async (req, res) => {
-        const boards = await Board.find().select("-createdBy -createdAt -updatedAt --deletedAt __v").sort({ updatedAt: -1 });
+        const boards = await Board.find().select("-createdBy -createdAt -updatedAt -deletedAt -__v").sort({ updatedAt: -1 });
         console.log(boards, 'BOARDDDD')
         return res.status(200).json(new ApiResponse(200, encryptData(boards), messages.SUCCESS.BOARDS))
     })
